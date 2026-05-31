@@ -1,5 +1,4 @@
 .env
-venv
-test_app
-__pycache__
-__init__
+venv/
+test_app/
+**/__pycache__/
