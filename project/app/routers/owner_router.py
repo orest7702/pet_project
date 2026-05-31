@@ -45,3 +45,21 @@ def create_owner(owner: OwnerCreate, db: Session = Depends(get_db)):
     Повертає створеного власника у форматі OwnerResponse.
     """
     return crud_owner.create_owner(db=db, owner=owner)
+
+@router.delete("/{owner_id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_owner_endpoint(owner_id: int, db: Session = Depends(get_db)):
+    """
+    Видалення власника за його ID.
+    """
+    # Викликаємо функцію з CRUD
+    success = crud_owner.delete_owner(db=db, owner_id=owner_id)
+    
+    # Якщо такого ID немає в базі — кажемо клієнту 404 Not Found
+    if not success:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Власника з ID {owner_id} не знайдено"
+        )
+    
+    # Статус 204 No Content автоматично означає успішне видалення без повернення тексту
+    return None

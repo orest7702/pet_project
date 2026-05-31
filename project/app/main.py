@@ -2,7 +2,7 @@ from fastapi import FastAPI
 
 from app.core.database import engine, Base
 
-from app.routers import room, device
+#from app.routers import room, device
 from app.routers import owner_router
 
 # 1. Створення таблиць у базі даних (ініціалізація)

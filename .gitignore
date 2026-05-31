@@ -1,0 +1,6 @@
+.env
+venv
+test_app
+__pycache__
+__init__
+.pyc
