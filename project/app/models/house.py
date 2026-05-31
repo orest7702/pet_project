@@ -6,7 +6,7 @@ class House(Base):
     __tablename__ = "houses"
     
     id = Column(Integer, primary_key=True, index=True)
-    owner_id = Column(Integer, ForeignKey("owners.id"))
+    owner_id = Column(Integer, ForeignKey("owners.id", ondelete="CASCADE"), nullable=False)
     name = Column(String, nullable=False)
     address = Column(String, unique=True, nullable=False)
     
