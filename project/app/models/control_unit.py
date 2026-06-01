@@ -6,7 +6,7 @@ class Control_unit(Base):
     __tablename__ = "control_units"
 
     id = Column(Integer, primary_key=True, index=True)
-    room_id = Column(Integer, ForeignKey("rooms.id"))
+    room_id = Column(Integer, ForeignKey("rooms.id", ondelete="CASCADE"))
     name = Column(String, nullable=False)
 
     room = relationship("Room", back_populates="control_units")

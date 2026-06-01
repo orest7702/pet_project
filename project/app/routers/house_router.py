@@ -24,6 +24,15 @@ def create_new_house(house: HouseCreate, db: Session = Depends(get_db)):
     return house_crud.create_house(db=db, house=house)
 
 
+@router.get("/", response_model=list[HouseResponse])
+def read_all_houses(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+    """
+    Отримання списку взагалі ВСІХ будинків, які є в базі даних (Адмін-метод).
+    """
+    houses = house_crud.get_houses(db, skip=skip, limit=limit)
+    return houses
+
+
 @router.get("/owner/{owner_id}", response_model=list[HouseResponse])
 def get_owner_houses(owner_id: int, db: Session = Depends(get_db)):
     """

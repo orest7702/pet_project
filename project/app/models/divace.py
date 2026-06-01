@@ -2,15 +2,19 @@ from sqlalchemy import Column, ForeignKey, Integer, String
 from sqlalchemy.orm import relationship
 from app.models.base import Base
 
-class Divace(Base):
-    __tablename__ = "divaces"
+class Device(Base):
+    __tablename__ = "devices"
 
     id = Column(Integer, primary_key=True, index=True)
-    room_id = Column(Integer, ForeignKey("rooms.id"), nullable=False)
-    kind_id = Column(Integer, ForeignKey("divace_kinds.id"), nullable=False)
+    room_id = Column(Integer, ForeignKey("rooms.id", ondelete="CASCADE"), nullable=False)
     name = Column(String, nullable=False, unique=True)
-    value_divace = Column(String(20), nullable=False)
+    value_device = Column(String(20), nullable=False) # Виправили divace -> device
     
-    room = relationship("Room", back_populates="divaces")
-    divace_kind = relationship("Divace_kind", back_populates="divaces")
-    telemetrys = relationship("Telemetry", back_populates="divaces")
+    kind_id = Column(Integer, ForeignKey("device_kinds.id"), nullable=False)
+    
+    # Зв'язок назад з кімнатою. back_populates має вказувати на "devices" (в множині)
+    room = relationship("Room", back_populates="devices")
+    
+    # ТИМЧАСОВО КОМЕНТУЄМО (поки не створимо ці моделі):
+    device_kind = relationship("Device_kind", back_populates="devices")
+    telemetrys = relationship("Telemetry", back_populates="device")

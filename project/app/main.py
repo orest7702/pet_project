@@ -2,8 +2,7 @@ from fastapi import FastAPI
 
 from app.core.database import engine, Base
 
-#from app.routers import room, device
-from app.routers import owner_router, house_router
+from app.routers import owner_router, house_router, room_router
 
 # 1. Створення таблиць у базі даних (ініціалізація)
 # Увага: для продакшену краще використовувати міграції (Alembic), 
@@ -18,6 +17,7 @@ app = FastAPI()
 # Підключаємо модулі з ендпоінтами до головного додатка
 app.include_router(owner_router.router, prefix="/api/v1")
 app.include_router(house_router.router, prefix="/api/v1")
+app.include_router(room_router.router, prefix="/api/v1")
 
 # 5. (Опціонально) Health Check ендпоінт для перевірки статусу сервера
 @app.get("/health")

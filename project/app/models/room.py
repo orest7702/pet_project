@@ -6,9 +6,12 @@ class Room(Base):
     __tablename__ = "rooms"
 
     id = Column(Integer, primary_key=True, index=True)
-    house_id = Column(Integer, ForeignKey("houses.id"))
     name = Column(String, nullable=False)
+    # Додали CASCADE для безпеки
+    house_id = Column(Integer, ForeignKey("houses.id", ondelete="CASCADE"), nullable=False)
 
     house = relationship("House", back_populates="rooms")
+    
+    # Виправили назви моделей та змінних на майбутнє
     control_units = relationship("Control_unit", back_populates="room")
-    divaces = relationship("Divace", back_populates="room")
+    devices = relationship("Device", back_populates="room")
