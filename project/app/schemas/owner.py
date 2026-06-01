@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ConfigDict
 from typing import Optional
 
 class OwnerBase(BaseModel):
@@ -9,13 +9,12 @@ class OwnerBase(BaseModel):
 class OwnerCreate(OwnerBase):
     pass
 
-class OwnerUpdate(OwnerBase):
+class OwnerUpdate(BaseModel):
     name: Optional[str] = Field(None, min_length=3, max_length=50)
     first_name: Optional[str] = Field(None, max_length=50)
     person_nomber: int = Field(None)
 
 class OwnerResponse(OwnerBase):
     id: int
-
-    class Config:
-        from_attributes = True
+    
+    model_config = ConfigDict(from_attributes=True) 
