@@ -1,9 +1,10 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
+from typing import List
 
 from app.core.database import get_db
 from app.schemas.room import RoomCreate, RoomResponse
-from app.crud import room_crud, house_crud  # імпортуємо потрібні CRUD
+from app.crud import room_crud, house_crud
 
 router = APIRouter(prefix="/rooms", tags=["Rooms"])
 
@@ -38,6 +39,15 @@ def get_house_rooms(house_id: int, db: Session = Depends(get_db)):
         )
         
     return room_crud.get_rooms_by_house(db=db, house_id=house_id)
+
+
+@router.get("/", response_model=List[RoomResponse], status_code=status.HTTP_200_OK)
+def read_all_rooms(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+    """
+    Ендпоінт для отримання ВСІХ кімнат у системі
+    """
+    rooms = room_crud.get_all_rooms(db, skip=skip, limit=limit)
+    return rooms
 
 
 @router.delete("/{room_id}", status_code=status.HTTP_204_NO_CONTENT)

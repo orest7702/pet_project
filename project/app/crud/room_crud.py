@@ -10,6 +10,10 @@ def get_rooms_by_house(db: Session, house_id: int):
     """Отримати всі кімнати, які належать конкретному будинку"""
     return db.query(Room).filter(Room.house_id == house_id).all()
 
+def get_all_rooms(db: Session, skip: int = 0, limit: int = 100):
+    """Отримати взагалі всі кімнати з бази даних (пагінація)"""
+    return db.query(Room).offset(skip).limit(limit).all()
+
 def create_room(db: Session, room: RoomCreate):
     """Створити нову кімнату за допомогою model_dump"""
     db_room = Room(**room.model_dump())
