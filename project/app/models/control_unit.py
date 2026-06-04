@@ -9,4 +9,7 @@ class Control_unit(Base):
     room_id = Column(Integer, ForeignKey("rooms.id", ondelete="CASCADE"))
     name = Column(String, nullable=False)
 
-    room = relationship("Room", back_populates="control_units")
+    #room = relationship("Room", back_populates="control_units")
+    
+    
+# не памятаю для чого робив цю сутність

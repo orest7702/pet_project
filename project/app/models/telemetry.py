@@ -12,4 +12,4 @@ class Telemetry(Base):
     temperature = Column(Float, nullable=True) # Змінив на Float для градусів
     humidity = Column(Integer, nullable=True)
     
-    device = relationship("Device", back_populates="telemetrys")
+    #device = relationship("Device", back_populates="telemetrys")
