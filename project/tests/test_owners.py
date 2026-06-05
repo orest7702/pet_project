@@ -1,55 +1,55 @@
-import pytest
-from fastapi.testclient import TestClient
-from app.main import app  # імпортуємо твій головний файл FastAPI
-
-# Створюємо клієнта для тестування
-client = TestClient(app)
-
-# Тестові дані, які ми будемо використовувати
-TEST_OWNER = {
-    "name": "Тестовий",
-    "first_name": "Власник",
-    "person_nomber": 999888777
-}
-
-def test_create_owner():
-    """Тест успішного створення власника"""
-    # Відправляємо POST-запит, як у Swagger
-    response = client.post("/api/v1/owners/", json=TEST_OWNER)
+def test_create_owner_success(client):
+    """
+    Тест успішного створення нового власника з реальними полями схеми.
+    """
+    owner_data = {
+        "name": "Шевченко",
+        "first_name": "Тарас",
+        "person_nomber": 12345
+    }
     
-    # Перевіряємо, чи повернувся статус 201 Created
+    response = client.post("/api/v1/owners/", json=owner_data)
+    
     assert response.status_code == 201
     
-    data = response.json()
-    # Перевіряємо, чи база повернула нам ID та правильні дані
-    assert "id" in data
-    assert data["name"] == TEST_OWNER["name"]
-    assert data["person_nomber"] == TEST_OWNER["person_nomber"]
+    json_data = response.json()
+    assert json_data["name"] == "Шевченко"
+    assert json_data["first_name"] == "Тарас"
+    assert json_data["person_nomber"] == 12345
+    assert "id" in json_data
+
+
+def test_read_owner_by_id_success(client, sample_owner):
+    """
+    Тест отримання конкретного власника за його ID.
+    """
+    response = client.get(f"/api/v1/owners/{sample_owner.id}")
     
-    # Зберігаємо ID створеного користувача для наступних тестів
-    pytest.shared_owner_id = data["id"]
-
-
-def test_get_owners_list():
-    """Тест отримання списку власників"""
-    response = client.get("/api/v1/owners/")
     assert response.status_code == 200
     
-    data = response.json()
-    assert isinstance(data, list)  # Має повернутися саме список
-    assert len(data) > 0
+    json_data = response.json()
+    assert json_data["id"] == sample_owner.id
+    assert json_data["name"] == sample_owner.name
+    assert json_data["person_nomber"] == sample_owner.person_nomber
 
 
-def test_delete_owner():
-    """Тест успішного видалення власника"""
-    # Беремо ID, який ми зберегли під час створення
-    owner_id = pytest.shared_owner_id
+def test_read_all_owners_success(client, sample_owner):
+    """
+    Тест отримання списку всіх власників.
+    """
+    response = client.get("/api/v1/owners/")
     
-    # Видаляємо його
-    response = client.delete(f"/api/v1/owners/{owner_id}")
+    assert response.status_code == 200
+    
+    json_data = response.json()
+    assert len(json_data) == 1
+    assert json_data[0]["id"] == sample_owner.id
+
+
+def test_delete_owner_success(client, sample_owner):
+    """
+    Тест успішного видалення власника.
+    """
+    response = client.delete(f"/api/v1/owners/{sample_owner.id}")
+    
     assert response.status_code == 204
-    
-    # Перевіряємо, що його дійсно немає (GET має повернути 404)
-    get_response = client.get(f"/api/v1/owners/{owner_id}")
-    # Примітка: якщо у тебе ще немає ендпоінту GET /owners/{id}, 
-    # цей рядок можна тимчасово закоментувати
